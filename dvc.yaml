@@ -1,0 +1,14 @@
+params:
+- dvclive/params.yaml
+metrics:
+- dvclive/metrics.json
+plots:
+- dvclive/plots/metrics:
+    x: step
+- dvclive/plots/custom/iris_feature_importance.json:
+    template: bar_horizontal
+    x: importance
+    y: name
+    title: MSE over horizons
+    x_label: Value
+    y_label: Error

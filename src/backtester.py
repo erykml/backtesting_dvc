@@ -84,7 +84,7 @@ class TSBacktester:
 
         self.backtest_df = backtest_df
 
-    def evaluate_backtest(self, metrics, agg_col="horizon"):
+    def evaluate_backtest(self, metrics, model_name, agg_col="horizon"):
         """
         Evaluates the backtest using specified performance metrics.
         """
@@ -94,21 +94,33 @@ class TSBacktester:
                 "Backtest was not yet executed! Please run it before evaluating"
             )
 
-        backtest_df = self.backtest_df.copy()
+        metadata_dict = {}
+        score_dict = {}
 
+        # adding some details about the backtest
+        metadata_dict["model_name"] = model_name
+        metadata_dict["start_date"] = self.start_date
+        metadata_dict["end_date"] = self.end_date
+        metadata_dict["backtest_freq"] = self.backtest_freq
+        metadata_dict["forecast_horizon"] = self.forecast_horizon
+        metadata_dict["validation_type"] = (
+            "rolling" if self.rolling_window_size is not None else "expanding"
+        )
+        metadata_dict["rolling_window_size"] = self.rolling_window_size
+
+        # preparing for scoring
+        backtest_df = self.backtest_df.copy()
         grouped = backtest_df.groupby(agg_col)
 
-        scores_dict = {}
-
+        # calculate scores and store them in a dict
         for metric, metric_func in metrics.items():
-            scores_dict[metric] = {}
-            scores_dict[metric]["total"] = metric_func(
-                backtest_df["actual"], backtest_df["forecast"]
+            score_dict[f"{metric}_total"] = round(
+                metric_func(backtest_df["actual"], backtest_df["forecast"]), 4
             )
 
             for group, group_df in grouped:
-                scores_dict[metric][group] = metric_func(
-                    group_df["actual"], group_df["forecast"]
+                score_dict[f"{metric}_{agg_col}_{group}"] = round(
+                    metric_func(group_df["actual"], group_df["forecast"]), 4
                 )
 
-        return scores_dict
+        return metadata_dict, score_dict

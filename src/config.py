@@ -5,11 +5,10 @@ BT_START_DATE = "2023-01-01"
 BT_END_DATE = "2023-12-24"
 BACKTEST_FREQ = "7D"
 DATA_FREQ = "1D"
-FCST_HORIZON = 7
+FCST_HORIZON = 3
 
 BT_METRICS = {
     "mse": mean_squared_error,
-    "mae": mean_absolute_error,
 }
 
 # list of features
