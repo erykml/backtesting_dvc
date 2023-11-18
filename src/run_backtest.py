@@ -15,23 +15,28 @@ df = pd.concat([df, dummies], axis=1)
 
 # run the backtest
 backtester = TSBacktester(
-    naive_forecast,
+    MODEL_DICT[SELECTED_MODEL],
     BT_START_DATE,
     BT_END_DATE,
     BACKTEST_FREQ,
     DATA_FREQ,
     FCST_HORIZON,
-    rolling_window_size=100,
+    rolling_window_size=ROLLING_WINDOW_SIZE,
 )
 
-backtester.run_backtest(df, target_col="y", verbose=True)
+if SELECTED_MODEL in MODELS_W_FEATURES:
+    backtester.run_backtest(df, target_col="y", verbose=True, features=FEATURE_LIST)
+else:
+    backtester.run_backtest(df, target_col="y", verbose=True)
+
 backtest_metadata, backtest_results = backtester.evaluate_backtest(
-    BT_METRICS, model_name="naive"
+    BT_METRICS, model_name=SELECTED_MODEL
 )
 
 print("Backtest results ----")
 print(backtest_results)
 
+# tracking experiments with DVC
 with Live(save_dvc_exp=True) as live:
     live.log_params(backtest_metadata)
     for metric_name, metric_value in backtest_results.items():
