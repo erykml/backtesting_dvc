@@ -1,7 +1,19 @@
 params:
 - dvclive/params.yaml
+plots:
+- dvclive/plots/custom/backtest_scores_mse.json:
+    template: linear
+    x: horizon
+    y: value
+    title: Backtest scores - mse
+    x_label: Horizon
+    y_label: Score
+- dvclive/plots/custom/backtest_scores_mae.json:
+    template: linear
+    x: horizon
+    y: value
+    title: Backtest scores - mae
+    x_label: Horizon
+    y_label: Score
 metrics:
 - dvclive/metrics.json
-plots:
-- dvclive/plots/metrics:
-    x: step

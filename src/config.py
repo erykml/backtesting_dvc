@@ -11,7 +11,9 @@ ROLLING_WINDOW_SIZE = None
 
 BT_METRICS = {
     "mse": mean_squared_error,
+    "mae": mean_absolute_error,
 }
+METRICS_TO_PLOT = ["mse", "mae"]
 
 # list of features
 MODELS_W_FEATURES = ["linear", "rf"]
@@ -30,7 +32,7 @@ FEATURE_LIST = [
 ]
 
 # a dictionary with the available models
-SELECTED_MODEL = "naive"
+SELECTED_MODEL = "linear"
 MODEL_DICT = {
     "naive": naive_forecast,
     "mean": mean_forecast,
